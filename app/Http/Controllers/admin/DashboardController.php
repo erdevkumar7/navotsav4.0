@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClaimRequest;
 use App\Models\ContactLead;
 use App\Models\Event;
+use App\Models\EventOrder;
 use App\Models\RaffleWinner;
 use App\Models\Ticket;
 use App\Models\User;
@@ -119,8 +120,10 @@ class DashboardController extends Controller
         //     ];
         // }
 
+        $ticketCount = EventOrder::sum('qty');
+        $totalRevenue = EventOrder::sum('amount');
 
-        return view('dashboard', compact('admin_details', 'vendor_details'));
+        return view('dashboard', compact('admin_details', 'vendor_details', 'ticketCount', 'totalRevenue'));
     }
 
     public function contactList()

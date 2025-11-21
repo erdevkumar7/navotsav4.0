@@ -5,14 +5,45 @@
         <div id="two-column-menu">
         </div>
         <ul class="navbar-nav" id="navbar-nav">
-            <li class="menu-title"><span data-key="t-menu"><img src="{{ asset('assets/images/logo.png') }}"
-                        alt=""></span></li>
+            <li class="menu-title d-flex justify-content-center"><span data-key="t-menu"><img
+                        src="{{ asset('assets/images/logo.png') }}" alt="" width="137px" height="116px"></span>
+            </li>
             <li class="nav-item">
                 <a href="{{ route(routePrefix() . 'dashboard') }}"
                     class="nav-link @if (request()->routeIs('dashboard')) active @endif ">
                     <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                 </a>
             </li> <!-- end Dashboard Menu -->
+
+                        @if (auth()->user()->hasAnyPermission(['view tickets']))
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#ticketManagment" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-ticket-line"></i> <span data-key="t-apps">Tickets</span>
+                    </a>
+                    <div class="collapse menu-dropdown  @if (request()->routeIs([routePrefix() . 'ticket.list', routePrefix() . 'winner.list'])) show @endif "
+                        id="ticketManagment">
+                        <ul class="nav nav-sm flex-column">
+                            @can('view tickets')
+                                <li class="nav-item">
+                                    <a href="{{ route(routePrefix() . 'ticket.list') }}"
+                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'ticket.list')) active @endif">Tickets
+                                    </a>
+                                </li>
+                            @endcan
+
+
+                            {{-- <li class="nav-item">
+                                <a href="{{ route(routePrefix() . 'winner.list') }}"
+                                    class="nav-link  @if (request()->routeIs(routePrefix() . 'winner.list')) active @endif">Winners
+                                </a>
+                            </li> --}}
+
+
+                        </ul>
+                    </div>
+                </li>
+            @endif
             @if (auth()->user()->hasAnyPermission(['view events', 'create events']))
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#eventManagment" data-bs-toggle="collapse" role="button"
@@ -42,34 +73,36 @@
                 </li>
             @endif
 
-            @if (auth()->user()->hasAnyPermission(['view categories', 'add category']))
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#categoryApps" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Category Management</span>
-                    </a>
-                    <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'category.create', routePrefix() . 'category.index'])) show @endif
-"
-                        id="categoryApps">
-                        <ul class="nav nav-sm flex-column">
-                            @can('view categories')
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'category.index') }}"
-                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'category.index')) active @endif">Categories
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('add category')
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'category.create') }}"
-                                        class="nav-link @if (request()->routeIs(routePrefix() . 'category.create')) active @endif ">Create Category
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </div>
-                </li>
-            @endif
+            
+
+            {{-- @if (auth()->user()->hasAnyPermission(['view categories', 'add category']))
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#categoryApps" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarApps">
+                            <i class="ri-apps-2-line"></i> <span data-key="t-apps">Category Management</span>
+                        </a>
+                        <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'category.create', routePrefix() . 'category.index'])) show @endif
+    "
+                            id="categoryApps">
+                            <ul class="nav nav-sm flex-column">
+                                @can('view categories')
+                                    <li class="nav-item">
+                                        <a href="{{ route(routePrefix() . 'category.index') }}"
+                                            class="nav-link  @if (request()->routeIs(routePrefix() . 'category.index')) active @endif">Categories
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('add category')
+                                    <li class="nav-item">
+                                        <a href="{{ route(routePrefix() . 'category.create') }}"
+                                            class="nav-link @if (request()->routeIs(routePrefix() . 'category.create')) active @endif ">Create Category
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endif --}}
             @if (auth()->user()->hasRole(['super-admin', 'event-organizer']))
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#rolesApps" data-bs-toggle="collapse" role="button"
@@ -124,37 +157,9 @@
                     </div>
                 </li>
             @endif
-            @if (auth()->user()->hasAnyPermission(['view tickets']))
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#ticketManagment" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-ticket-line"></i> <span data-key="t-apps">Tickets & Winners</span>
-                    </a>
-                    <div class="collapse menu-dropdown  @if (request()->routeIs([routePrefix() . 'ticket.list', routePrefix() . 'winner.list'])) show @endif "
-                        id="ticketManagment">
-                        <ul class="nav nav-sm flex-column">
-                            @can('view tickets')
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'ticket.list') }}"
-                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'ticket.list')) active @endif">Tickets
-                                    </a>
-                                </li>
-                            @endcan
 
 
-                            <li class="nav-item">
-                                <a href="{{ route(routePrefix() . 'winner.list') }}"
-                                    class="nav-link  @if (request()->routeIs(routePrefix() . 'winner.list')) active @endif">Winners
-                                </a>
-                            </li>
-
-
-                        </ul>
-                    </div>
-                </li>
-            @endif
-
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link menu-link" href="#blogManagment" data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarApps">
                     <i class="ri-article-line"></i> <span data-key="t-apps">Blogs Management</span>
@@ -178,7 +183,7 @@
 
                     </ul>
                 </div>
-            </li>
+            </li> --}}
 
             {{-- <li class="nav-item">
                 <a class="nav-link menu-link" href="#salesTransaction" data-bs-toggle="collapse" role="button"
@@ -208,7 +213,7 @@
             </li> --}}
 
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="{{ route(routePrefix() . 'claim.requests') }}"
                     class="nav-link @if (request()->routeIs(routePrefix() . 'claim.requests')) active @endif ">
                     <i class="bx bx-group"></i> <span data-key="t-apps">Claim Requests</span>
@@ -220,7 +225,7 @@
                     class="nav-link @if (request()->routeIs(routePrefix() . 'contact.list')) active @endif ">
                     <i class="bx bx-group"></i> <span data-key="t-apps">Contact Leads</span>
                 </a>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
                 <a href="{{ route(routePrefix() . 'settings') }}"

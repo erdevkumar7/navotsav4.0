@@ -6,7 +6,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>@yield('title') | Fifty Play Admin</title>
+    <title>@yield('title') | Navotsav 4.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -669,7 +669,7 @@
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> © FIFTY PLAY .
+                            </script> © MAAN .
                         </div>
                         <div class="col-sm-6">
                             {{-- <div class="text-sm-end d-none d-sm-block">

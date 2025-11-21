@@ -15,13 +15,14 @@ Thanks,<br>
 
 
 @php
-    $gold = "#ffcc00";
-    $orange = "#ff8800";
-    $dark = "#0a0a0a";
+    $gold = '#ffcc00';
+    $orange = '#ff8800';
+    $dark = '#0a0a0a';
 @endphp
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Pass Booking Confirmed</title>
@@ -41,7 +42,7 @@ Thanks,<br>
             background: #564e4e;
             border-radius: 14px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .header {
@@ -55,7 +56,7 @@ Thanks,<br>
         }
 
         .content {
-            padding: 30px !important    ;
+            padding: 30px !important;
             font-size: 16px;
             line-height: 1.7;
             text-align: left;
@@ -63,8 +64,8 @@ Thanks,<br>
         }
 
         .highlight-box {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 18px;
             margin: 20px 0;
@@ -102,7 +103,7 @@ Thanks,<br>
         <div class="header">
             Pass Booking Confirmed 🎟️
         </div>
-<hr>
+        <hr>
         <div class="content">
 
             <p>Hello <strong>{{ $order->user_name }}</strong>,</p>
@@ -116,16 +117,17 @@ Thanks,<br>
             </div>
 
             <p>We look forward to seeing you at <strong>NAVOTSAV 4.0</strong> 🤩</p>
-<p>For any query you can contact at: </p>
+            <p>For any query you can contact at: 9993776088</p>
 
 
         </div>
 
         <div class="footer">
-<p>MAAN - Madhya Pradesh Alumni Association of Navodaya</p>
+            <p>MAAN - Madhya Pradesh Alumni Association of Navodaya</p>
             © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
         </div>
 
     </div>
 </body>
+
 </html>
