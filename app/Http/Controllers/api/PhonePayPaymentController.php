@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PassBookingMail;
 use App\Models\EventOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PhonePayPaymentController extends Controller
@@ -212,18 +215,9 @@ class PhonePayPaymentController extends Controller
 
     public function offlineBooking(Request $req)
     {
-        // Validate request
         $validator = Validator::make($req->all(), [
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:event_orders,email',
             'mobile' => 'required|digits_between:10,15|unique:event_orders,mobile',
-            'pass_name' => 'required|string',
-            'jnv' => 'required',
-            'year' => 'required|numeric',
-            'event_id' => 'required|numeric',
-            'pass_id' => 'required|numeric',
-            'qty' => 'required|numeric|min:1',
-            'amount' => 'required|numeric|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -236,8 +230,8 @@ class PhonePayPaymentController extends Controller
         // Generate unique transaction ID
         $transactionId = Str::uuid();
 
-        // Save data using model
-        $order = EventOrder::create([
+        // Save order in DB
+        $orderId = \DB::table('event_orders')->insertGetId([
             "user_name" => $req->name,
             "email" => $req->email,
             "mobile" => $req->mobile,
@@ -248,14 +242,22 @@ class PhonePayPaymentController extends Controller
             "pass_id" => $req->pass_id,
             "qty" => $req->qty,
             "amount" => $req->amount,
+            "jnv_state" => $req->jnv_state,
             "merchant_transaction_id" => $transactionId
         ]);
 
+        // Fetch order data for email
+        $order = DB::table('event_orders')->where('id', $orderId)->first();
+
+        // Send Email
+        Mail::to($order->email)->send(new PassBookingMail($order));
+
+
         return response()->json([
             'success' => true,
-            'message' => 'Booking placed successfully!',
+            'message' => 'Payment successful',
             'transactionId' => $transactionId,
-            'orderId' => $order->id
+            'orderId' => $orderId
         ]);
     }
 }
