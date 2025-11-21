@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\EventOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class PhonePayPaymentController extends Controller
@@ -19,11 +21,11 @@ class PhonePayPaymentController extends Controller
             'amount' => 'required|numeric|min:1',
         ]);
 
-        
+
         $merchantId = env('PHONEPE_MERCHANT_ID');
         $saltKey = env('PHONEPE_SALT_KEY');
-        $saltIndex = env('PHONEPE_SALT_INDEX', 1);        
-    
+        $saltIndex = env('PHONEPE_SALT_INDEX', 1);
+
         $orderId = Str::uuid()->toString();
         $amount = $request->amount * 100; // Convert to paise       
 
@@ -180,12 +182,62 @@ class PhonePayPaymentController extends Controller
     }
 
 
-    public function offlineBooking(Request $req)
-    { 
-         $transactionId = Str::uuid();
+    // public function offlineBooking(Request $req)
+    // { 
+    //      $transactionId = Str::uuid();
 
-        // Save order in DB
-        $orderId = \DB::table('event_orders')->insertGetId([
+    //     // Save order in DB
+    //     $orderId = \DB::table('event_orders')->insertGetId([
+    //         "user_name" => $req->name,
+    //         "email" => $req->email,
+    //         "mobile" => $req->mobile,
+    //         "pass_name" => $req->pass_name,
+    //         "jnv" => $req->jnv,
+    //         "year" => $req->year,
+    //         "event_id" => $req->event_id,
+    //         "pass_id" => $req->pass_id,
+    //         "qty" => $req->qty,
+    //         "amount" => $req->amount,
+    //         "merchant_transaction_id" => $transactionId
+    //     ]);
+
+    //       return response()->json([
+    //             'success' => true,
+    //             'message' => 'Payment successful',
+    //             'transactionId' => $transactionId,
+    //             // 'orderId' => $orderId
+    //         ]);
+
+    // }
+
+    public function offlineBooking(Request $req)
+    {
+        // Validate request
+        $validator = Validator::make($req->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:event_orders,email',
+            'mobile' => 'required|digits_between:10,15|unique:event_orders,mobile',
+            'pass_name' => 'required|string',
+            'jnv' => 'required',
+            'year' => 'required|numeric',
+            'event_id' => 'required|numeric',
+            'pass_id' => 'required|numeric',
+            'qty' => 'required|numeric|min:1',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Generate unique transaction ID
+        $transactionId = Str::uuid();
+
+        // Save data using model
+        $order = EventOrder::create([
             "user_name" => $req->name,
             "email" => $req->email,
             "mobile" => $req->mobile,
@@ -199,12 +251,11 @@ class PhonePayPaymentController extends Controller
             "merchant_transaction_id" => $transactionId
         ]);
 
-          return response()->json([
-                'success' => true,
-                'message' => 'Payment successful',
-                'transactionId' => $transactionId,
-                // 'orderId' => $orderId
-            ]);
-
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking placed successfully!',
+            'transactionId' => $transactionId,
+            'orderId' => $order->id
+        ]);
     }
 }
