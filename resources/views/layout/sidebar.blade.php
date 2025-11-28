@@ -15,11 +15,11 @@
                 </a>
             </li> <!-- end Dashboard Menu -->
 
-                        @if (auth()->user()->hasAnyPermission(['view tickets']))
+            @if (auth()->user()->hasAnyPermission(['view tickets']))
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#ticketManagment" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-ticket-line"></i> <span data-key="t-apps">Tickets</span>
+                        <i class="ri-ticket-line"></i> <span data-key="t-apps">Booked Tickets</span>
                     </a>
                     <div class="collapse menu-dropdown  @if (request()->routeIs([routePrefix() . 'ticket.list', routePrefix() . 'winner.list'])) show @endif "
                         id="ticketManagment">
@@ -44,6 +44,42 @@
                     </div>
                 </li>
             @endif
+
+            @if (auth()->user()->hasAnyPermission(['view users', 'view organizers', 'view buyers']))
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#userApps" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="bx bx-group"></i> <span data-key="t-apps">User Management
+                        </span>
+                    </a>
+                    <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'organizers', routePrefix() . 'buyers', routePrefix() . 'users.index'])) show @endif " id="userApps">
+                        <ul class="nav nav-sm flex-column">
+                            {{-- @can('view users')
+                                <li class="nav-item">
+                                    <a href="{{ route(routePrefix() . 'users.index') }}"
+                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'users.index')) active @endif">Users
+                                    </a>
+                                </li>
+                            @endcan
+                            @if (auth()->user()->hasRole('super-admin'))
+                                <li class="nav-item">
+                                    <a href="{{ route(routePrefix() . 'organizers') }}"
+                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'organizers')) active @endif">Organizers
+                                    </a>
+                                </li>
+                            @endif --}}
+                            @can('view buyers')
+                                <li class="nav-item">
+                                    <a href="{{ route(routePrefix() . 'buyers') }}"
+                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'buyers')) active @endif">Buyers
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </div>
+                </li>
+            @endif
+
             @if (auth()->user()->hasAnyPermission(['view events', 'create events']))
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#eventManagment" data-bs-toggle="collapse" role="button"
@@ -73,7 +109,7 @@
                 </li>
             @endif
 
-            
+
 
             {{-- @if (auth()->user()->hasAnyPermission(['view categories', 'add category']))
                     <li class="nav-item">
@@ -109,8 +145,7 @@
                         aria-expanded="false" aria-controls="rolesApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Roles & Permissions</span>
                     </a>
-                    <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'roles.index', routePrefix() . 'roles.edit'])) show @endif
-" id="rolesApps">
+                    <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'roles.index', routePrefix() . 'roles.edit'])) show @endif " id="rolesApps">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route(routePrefix() . 'roles.index') }}"
@@ -120,41 +155,6 @@
                         </ul>
                     </div>
 
-                </li>
-            @endif
-
-            @if (auth()->user()->hasAnyPermission(['view users', 'view organizers', 'view buyers']))
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#userApps" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="bx bx-group"></i> <span data-key="t-apps">User Management
-                        </span>
-                    </a>
-                    <div class="collapse menu-dropdown @if (request()->routeIs([routePrefix() . 'organizers', routePrefix() . 'buyers', routePrefix() . 'users.index'])) show @endif " id="userApps">
-                        <ul class="nav nav-sm flex-column">
-                            {{-- @can('view users')
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'users.index') }}"
-                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'users.index')) active @endif">Users
-                                    </a>
-                                </li>
-                            @endcan --}}
-                            @if (auth()->user()->hasRole('super-admin'))
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'organizers') }}"
-                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'organizers')) active @endif">Organizers
-                                    </a>
-                                </li>
-                            @endif
-                            @can('view buyers')
-                                <li class="nav-item">
-                                    <a href="{{ route(routePrefix() . 'buyers') }}"
-                                        class="nav-link  @if (request()->routeIs(routePrefix() . 'buyers')) active @endif">Buyers
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </div>
                 </li>
             @endif
 

@@ -39,6 +39,7 @@
                                         <th>Passout Year</th>
                                         <th>Qty</th>
                                         <th>Amount</th>
+                                        <th>Payment status</th>
                                         {{-- <th>Transaction ID</th> --}}
                                         <th>Booked At</th>
                                     </tr>
@@ -48,7 +49,7 @@
                                     @foreach ($events as $key => $event)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>NAVOTSAV 4.0</td>
+                                            <td>NAVLAY 1.0</td>
                                             {{-- <td>{{ $event->pass_id }}</td> --}}
                                             <td>{{ $event->pass_name }}</td>
                                             <td>{{ $event->user_name }}</td>
@@ -58,6 +59,7 @@
                                             <td>{{ $event->year }}</td>
                                             <td>{{ $event->qty }}</td>
                                             <td>{{ $event->amount }}</td>
+                                            <td>{{$event->payment_status}}</td>
                                             {{-- <td>{{ $event->merchant_transaction_id }}</td> --}}
                                             <td>{{ $event->created_at }}</td>
                                         </tr>
