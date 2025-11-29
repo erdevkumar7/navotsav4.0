@@ -11,6 +11,7 @@ use App\Http\Controllers\api\ProfileController;
 use App\Http\Controllers\api\TicketPurchaseController;
 use App\Http\Controllers\api\WebLeadController;
 use App\Http\Controllers\api\PhonePayPaymentController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PhonePeController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WebviewController;
@@ -108,6 +109,10 @@ Route::post("/contact-lead", [WebLeadController::class, 'contactLead']);
 
 
  Route::post('/offline-booking', [PhonePayPaymentController::class, 'offlineBooking']);
+
+ 
+Route::post('/razorpay/order', [PaymentController::class, 'createOrder']);
+Route::post('/razorpay/verify', [PaymentController::class, 'verifyPayment']);
 
 
 
