@@ -108,15 +108,15 @@ Thanks,<br>
 
             <p>Hello <strong>{{ $order->user_name }}</strong>,</p>
 
-            <p>Thank you for booking your pass! Your entry is confirmed 🎉</p>
+            <p>Thank you for booking! Your entry will confirm after the payment 🎉</p>
 
             <div class="highlight-box">
                 <p><span>Pass Name:</span> {{ $order->pass_name }}</p>
                 <p><span>Quantity:</span> {{ $order->qty }}</p>
-                <p><span>Amount Paid:</span> ₹{{ $order->amount }}</p>
+                <p><span>Amount:</span> ₹{{ $order->amount }}</p>
             </div>
 
-            <p>We look forward to seeing you at <strong>NAVOTSAV 4.0</strong> 🤩</p>
+            <p>We look forward to seeing you at <strong>NAVLAY 1.0</strong> 🤩</p>
             <p>For any query you can contact at: 9993776088</p>
 
 

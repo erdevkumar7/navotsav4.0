@@ -23,11 +23,39 @@ class TicketController extends Controller
         return view('ticket-package.ticket-list', compact('events'));
     }
 
-    
-      public function ticketListOffline()
+
+    public function ticketListOffline()
     {
         $events = EventOrder::get();
         return view('ticket-package.ticket-list', compact('events'));
+    }
+
+    // public function updateStatus(Request $request, $id)
+    // {     
+
+    //     $event = EventOrder::findOrFail($id);
+    //     $event->payment_status = $request->payment_status;
+    //     $event->save();
+
+    //     return back()->with('success', 'Payment status updated successfully!');
+    // }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $event = EventOrder::findOrFail($id);
+
+        $event->online_transaction_id = $request->online_transaction_id;
+        $event->payment_status = $request->payment_status;
+
+        if ($request->hasFile('payment_image')) {
+            $file = $request->payment_image->store('payment_proofs', 'public');
+            $event->payment_image = $file;
+        }
+
+
+        $event->save();
+
+        return back()->with('success',  'Payment updated successfully');
     }
 
     public function ticketData(Request $request)
@@ -79,21 +107,21 @@ class TicketController extends Controller
             ->addIndexColumn()
 
             ->editColumn('event_title', fn($t) => $t->event_title ?? 'N/A')
-           ->editColumn('buyer_name', function ($t) {
-                    $name = $t->buyer_name ?? null;
-                    $phone = $t->buyer_phone ?? null;
+            ->editColumn('buyer_name', function ($t) {
+                $name = $t->buyer_name ?? null;
+                $phone = $t->buyer_phone ?? null;
 
-                    if (!$name && !$phone) {
-                        return 'N/A';
-                    }
+                if (!$name && !$phone) {
+                    return 'N/A';
+                }
 
-                    $output = $name ?: '';
-                    if ($phone) {
-                        $output .= $name ? " ({$phone})" : $phone;
-                    }
+                $output = $name ?: '';
+                if ($phone) {
+                    $output .= $name ? " ({$phone})" : $phone;
+                }
 
-                    return $output;
-                })
+                return $output;
+            })
 
             ->editColumn('price', fn($t) => format_price($t->price))
             ->editColumn('total_price', fn($t) => format_price($t->total_price))

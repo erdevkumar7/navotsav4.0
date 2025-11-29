@@ -301,7 +301,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::prefix('ticket')->group(function () {
             // Route::get('/list', [TicketController::class, 'ticketList'])->name('ticket.list');
 
-            Route::get('/list', [TicketController::class, 'ticketListOffline'])->name('ticket.list');   // maan route
+            // maan route ---------------------------------------------
+            Route::get('/list', [TicketController::class, 'ticketListOffline'])->name('ticket.list');  
+            Route::put('/update-status/{id}', [TicketController::class, 'updateStatus'])->name('ticket.updateStatus');
+            // maan route ---------------------------------------------
+
             Route::get('/data', [TicketController::class, 'ticketData'])->name('ticket.data');
         });
 

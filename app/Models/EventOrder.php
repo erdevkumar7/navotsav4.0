@@ -20,5 +20,6 @@ class EventOrder extends Model
         'qty',
         'amount',
         'merchant_transaction_id',
+        'payment_proofs',
     ];
 }
