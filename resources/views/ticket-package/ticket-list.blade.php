@@ -27,7 +27,7 @@
                     <div class="card">
 
                         <div class="card-body">
-                            <table class="table table-hover table-bordered table-striped">
+                            <table class="table table-hover table-bordered table-striped" id="newEventTable">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -41,8 +41,9 @@
                                         <th>Passout Year</th>
                                         <th>Qty</th>
                                         <th>Amount</th>
-                                        <th>Payment status</th>
+                                        <th>Payment status</th>                                       
                                         {{-- <th>Transaction ID</th> --}}
+                                         <th>Payment Proof</th>
                                         <th>Booked At</th>
                                     </tr>
                                 </thead>
@@ -88,11 +89,24 @@
                                                 </form>
                                             </td>
                                             {{-- <td>{{ $event->merchant_transaction_id }}</td> --}}
+                                            {{-- {{ asset('assets/images/logo.png') }} --}}
+                                            <td>
+                                                @if ($event->payment_status === 'success' && $event->payment_image)
+                                                    <a href="{{ asset('assets/payment_proofs/' . $event->payment_image) }}"
+                                                        target="_blank" class="btn btn-sm btn-primary">
+                                                        View
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">--</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $event->created_at }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                
                             </table>
+                            {{-- {{$events->links()}} --}}
                         </div>
                     </div>
                 </div><!--end col-->
@@ -298,5 +312,11 @@
                 table.ajax.reload(); // reload table data based on new filter
             });
         });
+    </script>
+
+    <script>
+            $('#newEventTable').DataTable({
+
+            })
     </script>
 @endpush

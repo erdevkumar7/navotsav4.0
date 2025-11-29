@@ -26,7 +26,7 @@ class TicketController extends Controller
 
     public function ticketListOffline()
     {
-        $events = EventOrder::get();
+        $events = EventOrder::latest()->get();
         return view('ticket-package.ticket-list', compact('events'));
     }
 
@@ -47,9 +47,21 @@ class TicketController extends Controller
         $event->online_transaction_id = $request->online_transaction_id;
         $event->payment_status = $request->payment_status;
 
+        // if ($request->hasFile('payment_image')) {
+        //     $file = $request->payment_image->store('payment_proofs', 'public');
+        //     $event->payment_image = $file;
+        // }
+
         if ($request->hasFile('payment_image')) {
-            $file = $request->payment_image->store('payment_proofs', 'public');
-            $event->payment_image = $file;
+
+            $image      = $request->file('payment_image');
+            $imageName  = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            // Move file to /public/payment_proofs
+            $image->move(public_path('assets/payment_proofs'), $imageName);
+
+            // Save path in DB (relative path)
+            $event->payment_image = $imageName;
         }
 
 

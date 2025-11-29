@@ -108,7 +108,7 @@ Thanks,<br>
 
             <p>Hello <strong>{{ $order->user_name }}</strong>,</p>
 
-            <p>Thank you for booking! Your entry will confirm after the payment 🎉</p>
+            <p>Thank you for booking! Your entry will be confirmed after the payment 🎉</p>
 
             <div class="highlight-box">
                 <p><span>Pass Name:</span> {{ $order->pass_name }}</p>

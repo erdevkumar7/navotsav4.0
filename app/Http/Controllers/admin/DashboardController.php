@@ -121,9 +121,28 @@ class DashboardController extends Controller
         // }
 
         $ticketCount = EventOrder::sum('qty');
+
+        $studentTickets = EventOrder::where('pass_id', 1)->sum('qty');
+
+        $professionalAdultTickets = EventOrder::where('pass_id', 2)->sum('qty');
+
+        $professionalFamilyTickets = EventOrder::where('pass_id', 3)->sum('qty');
+
+        $hostFamilyTickets = EventOrder::where('pass_id', 4)->sum('qty');
+
+        // dd($studentTickets, $professionalAdultTickets, $professionalFamilyTickets, $hostFamilyTickets);
         $totalRevenue = EventOrder::sum('amount');
 
-        return view('dashboard', compact('admin_details', 'vendor_details', 'ticketCount', 'totalRevenue'));
+        return view('dashboard', compact(
+            'admin_details',
+            'vendor_details',
+            'ticketCount',
+            'totalRevenue',
+            'studentTickets',
+            'professionalAdultTickets',
+            'professionalFamilyTickets',
+            'hostFamilyTickets',
+        ));
     }
 
     public function contactList()
