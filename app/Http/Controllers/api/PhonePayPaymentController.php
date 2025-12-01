@@ -250,7 +250,7 @@ class PhonePayPaymentController extends Controller
         $order = DB::table('event_orders')->where('id', $orderId)->first();
 
         // Send Email
-        Mail::to($order->email)->send(new PassBookingMail($order));
+      //  Mail::to($order->email)->send(new PassBookingMail($order));
 
 
         return response()->json([

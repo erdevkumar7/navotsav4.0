@@ -302,7 +302,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
             // Route::get('/list', [TicketController::class, 'ticketList'])->name('ticket.list');
 
             // maan route ---------------------------------------------
-            Route::get('/list', [TicketController::class, 'ticketListOffline'])->name('ticket.list');  
+            Route::get('/list', [TicketController::class, 'ticketListOffline'])->name('ticket.list'); 
+
+            Route::get('/edit/{id}', [TicketController::class, 'AdminEditTicket'])->name('ticket.edit');
+            Route::put('/update/{id}', [TicketController::class, 'AdminUpdateTicket'])->name('ticket.update');
+
             Route::put('/update-status/{id}', [TicketController::class, 'updateStatus'])->name('ticket.updateStatus');
             // maan route ---------------------------------------------
 

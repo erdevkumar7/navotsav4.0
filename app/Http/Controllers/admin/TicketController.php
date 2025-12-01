@@ -17,28 +17,43 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TicketController extends Controller
 {
-    public function ticketList()
-    {
-        $events = Event::get();
-        return view('ticket-package.ticket-list', compact('events'));
-    }
-
-
+    // MAAN FUnctions ---------------------------------------
     public function ticketListOffline()
     {
         $events = EventOrder::latest()->get();
         return view('ticket-package.ticket-list', compact('events'));
+    }  
+
+    public function AdminEditTicket($id)
+    {
+        $event = EventOrder::findOrFail($id);
+        return view('ticket-package.ticket-edit-maan', compact('event'));
     }
 
-    // public function updateStatus(Request $request, $id)
-    // {     
+    public function AdminUpdateTicket(Request $request, $id)
+    {
+        $event = EventOrder::findOrFail($id);
 
-    //     $event = EventOrder::findOrFail($id);
-    //     $event->payment_status = $request->payment_status;
-    //     $event->save();
+        $event->user_name = $request->user_name;
+        $event->email = $request->email;
+        $event->mobile = $request->mobile;
+        $event->jnv = $request->jnv;
+        $event->year = $request->year;
+        $event->qty = $request->qty;
+        $event->amount = $request->amount;
 
-    //     return back()->with('success', 'Payment status updated successfully!');
-    // }
+        if ($request->hasFile('payment_image')) {
+            $image = $request->file('payment_image');
+            $name = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('payment_proofs'), $name);
+            $event->payment_image = $name;
+        }
+
+        $event->save();
+
+        return redirect()->route('admin.ticket.list')
+            ->with('success', 'Details updated successfully');
+    }
 
     public function updateStatus(Request $request, $id)
     {
@@ -68,6 +83,15 @@ class TicketController extends Controller
         $event->save();
 
         return back()->with('success',  'Payment updated successfully');
+    }
+
+
+    // MAAN function  ------------------------------------------------------
+
+    public function ticketList()
+    {
+        $events = Event::get();
+        return view('ticket-package.ticket-list', compact('events'));
     }
 
     public function ticketData(Request $request)

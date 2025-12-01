@@ -2,7 +2,23 @@
 
 @section('title', 'Tickets')
 
+<style>
+    .ticket-offline-book {
+        width: 100%;
+    }
 
+    .ticket-offline-book .card {
+        overflow-y: scroll;
+    }
+
+    .ticket-offline-book tbody td {
+        font-size: 13px;
+    }
+
+    div#newEventTable_wrapper th.sorting {
+        font-size: 14px !important;
+    }
+</style>
 
 @section('content')
     <div class="page-content">
@@ -23,7 +39,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 ticket-offline-book">
                     <div class="card">
 
                         <div class="card-body">
@@ -41,10 +57,11 @@
                                         <th>Passout Year</th>
                                         <th>Qty</th>
                                         <th>Amount</th>
-                                        <th>Payment status</th>                                       
-                                        {{-- <th>Transaction ID</th> --}}
-                                         <th>Payment Proof</th>
                                         <th>Booked At</th>
+                                        <th>Payment status</th>
+                                        {{-- <th>Transaction ID</th> --}}
+                                        <th>Edit Details</th>
+                                        <th>Payment Proof</th>
                                     </tr>
                                 </thead>
 
@@ -62,7 +79,7 @@
                                             <td>{{ $event->year }}</td>
                                             <td>{{ $event->qty }}</td>
                                             <td>{{ $event->amount }}</td>
-
+                                            <td>{{ $event->created_at }}</td>
                                             <td>
                                                 <form action="{{ route('admin.ticket.updateStatus', $event->id) }}"
                                                     method="POST">
@@ -90,6 +107,14 @@
                                             </td>
                                             {{-- <td>{{ $event->merchant_transaction_id }}</td> --}}
                                             {{-- {{ asset('assets/images/logo.png') }} --}}
+
+                                            <td>
+                                                <a href="{{ route('admin.ticket.edit', $event->id) }}"
+                                                    class="btn btn-sm btn-success">
+                                                    Edit
+                                                </a>
+                                            </td>
+
                                             <td>
                                                 @if ($event->payment_status === 'success' && $event->payment_image)
                                                     <a href="{{ asset('assets/payment_proofs/' . $event->payment_image) }}"
@@ -100,11 +125,10 @@
                                                     <span class="text-muted">--</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $event->created_at }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                
+
                             </table>
                             {{-- {{$events->links()}} --}}
                         </div>
@@ -315,8 +339,8 @@
     </script>
 
     <script>
-            $('#newEventTable').DataTable({
+        $('#newEventTable').DataTable({
 
-            })
+        })
     </script>
 @endpush
