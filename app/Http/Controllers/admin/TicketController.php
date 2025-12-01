@@ -22,7 +22,7 @@ class TicketController extends Controller
     {
         $events = EventOrder::latest()->get();
         return view('ticket-package.ticket-list', compact('events'));
-    }  
+    }
 
     public function AdminEditTicket($id)
     {
@@ -33,6 +33,24 @@ class TicketController extends Controller
     public function AdminUpdateTicket(Request $request, $id)
     {
         $event = EventOrder::findOrFail($id);
+
+        // Tracking which pass type user selected
+        $passId = $event->pass_id;
+        $qty    = $request->qty;
+
+        // Validation rules based on pass_id
+        $maxQty = match ($passId) {
+            1 => 2,   // Student
+            2 => 2,   // Adult
+            3 => 4,   // Family
+            4 => 2,   // Host
+            default => 1
+        };
+
+        if ($qty > $maxQty) {
+            return back()->with('error', "You cannot select more than $maxQty quantity for this pass.");
+        }
+
 
         $event->user_name = $request->user_name;
         $event->email = $request->email;

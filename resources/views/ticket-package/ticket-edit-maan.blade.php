@@ -5,8 +5,22 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-
             <h3>Edit Ticket</h3>
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @php
+                $passNames = [
+                    1 => 'Students pass (for 1)',
+                    2 => 'Professional pass for adult (for 1)',
+                    3 => 'Professional pass for family (family of 2)',
+                    4 => 'Host pass only for family (family of 4)',
+                ];
+            @endphp
+
 
             <form action="{{ route('admin.ticket.update', $event->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -29,15 +43,20 @@
                         <input type="text" name="mobile" class="form-control" value="{{ $event->mobile }}" required>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label>JNV</label>
                         <input type="text" name="jnv" class="form-control" value="{{ $event->jnv }}" required>
+                    </div> --}}
+                    
+                    <div class="col-md-6 mb-3">
+                        <label>Pass Name</label>
+                        <p><strong>Pass Name:</strong> {{ $passNames[$event->pass_id] }}</p>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    {{-- <div class="col-md-6 mb-3">
                         <label>Passout Year</label>
                         <input type="text" name="year" class="form-control" value="{{ $event->year }}" required>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-6 mb-3">
                         <label>Qty</label>
