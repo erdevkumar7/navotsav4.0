@@ -108,11 +108,9 @@ Route::post("/contact-lead", [WebLeadController::class, 'contactLead']);
 // -----------------------------PhonePayPaymentController-----------------------------
 
 
- Route::post('/offline-booking', [PhonePayPaymentController::class, 'offlineBooking']);
+Route::post('/offline-booking', [PhonePayPaymentController::class, 'offlineBooking']);
 
- 
+Route::post('/get-pass', [PaymentController::class, 'getPassByMobile']);
+
 Route::post('/razorpay/order', [PaymentController::class, 'createOrder']);
 Route::post('/razorpay/verify', [PaymentController::class, 'verifyPayment']);
-
-
-
