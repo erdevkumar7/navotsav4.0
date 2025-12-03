@@ -6,12 +6,28 @@ use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
     public function createOrder(Request $request)
     {
         try {
+            // Run validation ONLY if first-time booking
+            if ($request->mode === 'new') {
+                $validator = Validator::make($request->all(), [
+                    'email' => 'required|email|unique:event_orders,email',
+                    'mobile' => 'required|digits_between:10,15|unique:event_orders,mobile',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+            }
+
             $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
 
             $order = $api->order->create([
@@ -94,7 +110,7 @@ class PaymentController extends Controller
             // 🔍 Check if booking already exists
             $existing = DB::table('event_orders')
                 ->where('mobile', $req->mobile)
-                ->where('id', $req->booking_id)
+                // ->where('id', $req->booking_id)
                 ->first();
 
             if ($existing) {

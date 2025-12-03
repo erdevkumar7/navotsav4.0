@@ -59,18 +59,21 @@ class TicketController extends Controller
         $event->year = $request->year;
         $event->qty = $request->qty;
         $event->amount = $request->amount;
+        // $event->payment_status = $request->payment_status;
+        // $event->merchant_transaction_id = $request->merchant_transaction_id;
 
         if ($request->hasFile('payment_image')) {
-            $image = $request->file('payment_image');
-            $name = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('payment_proofs'), $name);
-            $event->payment_image = $name;
+            $image      = $request->file('payment_image');
+            $imageName  = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            // Move file to /public/payment_proofs
+            $image->move(public_path('assets/payment_proofs'), $imageName);
+            // Save path in DB (relative path)
+            $event->payment_image = $imageName;
         }
 
         $event->save();
 
-        return redirect()->route('admin.ticket.list')
-            ->with('success', 'Details updated successfully');
+        return back()->with('success', 'Details updated successfully');
     }
 
     public function updateStatus(Request $request, $id)

@@ -43,19 +43,19 @@
                         <input type="text" name="mobile" class="form-control" value="{{ $event->mobile }}" required>
                     </div>
 
-                    {{-- <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label>JNV</label>
                         <input type="text" name="jnv" class="form-control" value="{{ $event->jnv }}" required>
-                    </div> --}}
-                    
+                    </div>
+
                     <div class="col-md-6 mb-3">
-                        <label>Pass Name</label>
-                        <p><strong>Pass Name:</strong> {{ $passNames[$event->pass_id] }}</p>
+                        <label>Passout Year</label>
+                        <input type="text" name="year" class="form-control" value="{{ $event->year }}" required>
                     </div>
 
                     {{-- <div class="col-md-6 mb-3">
-                        <label>Passout Year</label>
-                        <input type="text" name="year" class="form-control" value="{{ $event->year }}" required>
+                        <label>Pass Name</label>
+                        <p><strong>Pass Name:</strong> {{ $passNames[$event->pass_id] }}</p>
                     </div> --}}
 
                     <div class="col-md-6 mb-3">
@@ -69,13 +69,36 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
+                        <label>Payment Transaction ID</label>
+                        <input type="text" name="merchant_transaction_id" class="form-control"
+                            value="{{ $event->merchant_transaction_id }}" disabled>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Payment Status</label>
+                        <select name="payment_status" class="form-control form-select" disabled>
+                            <option value="pending" style="background: #ffc107"
+                                {{ $event->payment_status == 'pending' ? 'selected' : '' }}>
+                                Pending
+                            </option>
+
+                            <option value="success" style="background: #28a745"
+                                {{ $event->payment_status == 'success' ? 'selected' : '' }}>
+                                Success
+                            </option>
+                        </select>
+                    </div>
+
+
+                    {{-- <div class="col-md-6 mb-3">
                         <label>Payment Proof</label>
                         <input type="file" name="payment_image" class="form-control">
 
                         @if ($event->payment_image)
-                            <img src="{{ asset('payment_proofs/' . $event->payment_image) }}" width="120" class="mt-2">
+                            <img src="{{ asset('payment_proofs/' . $event->payment_image) }}" width="120"
+                                class="mt-2">
                         @endif
-                    </div>
+                    </div> --}}
 
                 </div>
 

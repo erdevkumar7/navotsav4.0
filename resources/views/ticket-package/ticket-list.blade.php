@@ -86,10 +86,18 @@
                                                     @csrf
                                                     @method('PUT')
 
+                                                    {{-- <select name="payment_status"
+                                                        class="form-select form-select-sm status-select"
+                                                        data-status="{{ $event->payment_status }}"
+                                                        onchange="handleStatusChange(this, {{ $event->id }})"
+                                                        style="background: {{ $event->payment_status == 'success' ? '#28a745' : '#ffc107' }}"> --}}
+
+
                                                     <select name="payment_status"
                                                         class="form-select form-select-sm status-select"
                                                         data-status="{{ $event->payment_status }}"
                                                         onchange="handleStatusChange(this, {{ $event->id }})"
+                                                        {{ $event->payment_status === 'success' ? 'disabled' : '' }}
                                                         style="background: {{ $event->payment_status == 'success' ? '#28a745' : '#ffc107' }}">
 
                                                         <option value="pending" style="background: #ffc107"
