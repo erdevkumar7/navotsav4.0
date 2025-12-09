@@ -133,7 +133,8 @@ class DashboardController extends Controller
 
         $freeRegistration = EventOrder::where('pass_id', 5)->count();
 
-        // dd($studentTickets, $professionalAdultTickets, $professionalFamilyTickets, $hostFamilyTickets);
+        $allRegistration = EventOrder::count();
+        // dd($allRegistration);
         $totalRevenue = EventOrder::sum('amount');
 
         $paymentSuccess = EventOrder::where('payment_status', 'success')->sum('amount');
@@ -155,6 +156,7 @@ class DashboardController extends Controller
             'hostFamilyTickets',
             'paymentDonation',
             'freeRegistration',
+            'allRegistration',
         ));
     }
 

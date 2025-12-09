@@ -47,9 +47,9 @@
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Event Name</th>
+                                        {{-- <th>Event Name</th> --}}
                                         {{-- <th>Pass ID</th> --}}
-                                        <th>Pass Name</th>
+                                        {{-- <th>Pass Name</th> --}}
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
@@ -69,9 +69,9 @@
                                     @foreach ($events as $key => $event)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>NAVLAY 1.0</td>
+                                            {{-- <td>NAVLAY 1.0</td> --}}
                                             {{-- <td>{{ $event->pass_id }}</td> --}}
-                                            <td>{{ $event->pass_name }}</td>
+                                            {{-- <td>{{ $event->pass_name }}</td> --}}
                                             <td>{{ $event->user_name }}</td>
                                             <td>{{ $event->email }}</td>
                                             <td>{{ $event->mobile }}</td>
