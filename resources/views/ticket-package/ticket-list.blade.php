@@ -30,7 +30,7 @@
                         {{-- <h4 class="mb-sm-0">Events</h4> --}}
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">Tickets & Winners</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Tickets & Bookings</a></li>
                                 <li class="breadcrumb-item active">Tickets</li>
                             </ol>
                         </div>
@@ -55,12 +55,12 @@
                                         <th>Mobile</th>
                                         <th>Jnv</th>
                                         <th>Passout Year</th>
-                                        <th>Qty</th>
-                                        <th>Amount</th>
                                         <th>Booked At</th>
                                         <th>Payment status</th>
                                         {{-- <th>Transaction ID</th> --}}
                                         <th>Edit Details</th>
+                                        <th>Qty</th>
+                                        <th>Amount</th>
                                         <th>Payment Proof</th>
                                     </tr>
                                 </thead>
@@ -77,8 +77,6 @@
                                             <td>{{ $event->mobile }}</td>
                                             <td>{{ $event->jnv }}</td>
                                             <td>{{ $event->year }}</td>
-                                            <td>{{ $event->qty }}</td>
-                                            <td>{{ $event->amount }}</td>
                                             <td>{{ $event->created_at }}</td>
                                             <td>
                                                 <form action="{{ route('admin.ticket.updateStatus', $event->id) }}"
@@ -122,6 +120,8 @@
                                                     Edit
                                                 </a>
                                             </td>
+                                            <td>{{ $event->qty }}</td>
+                                            <td>{{ $event->amount }}</td>
 
                                             <td>
                                                 @if ($event->payment_status === 'success' && $event->payment_image)
@@ -264,8 +264,6 @@
     </script>
 
 
-
-
     <script>
         $(function() {
             // Initialize DataTable and store in a variable
@@ -347,8 +345,10 @@
     </script>
 
     <script>
-        $('#newEventTable').DataTable({
-
-        })
+        $(document).ready(function() {
+            $('#newEventTable').DataTable({
+                pageLength: 25
+            });
+        });
     </script>
 @endpush

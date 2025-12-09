@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventDonation;
 use App\Models\EventOrder;
 use App\Models\RaffleWinner;
 use App\Models\Ticket;
@@ -106,6 +107,11 @@ class TicketController extends Controller
         return back()->with('success',  'Payment updated successfully');
     }
 
+    public function donationList()
+    {
+        $events = EventDonation::latest()->get();
+        return view('ticket-package.donation-list', compact('events'));
+    }
 
     // MAAN function  ------------------------------------------------------
 

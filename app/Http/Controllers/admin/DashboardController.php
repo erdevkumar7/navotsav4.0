@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\EventDonation;
 
 class DashboardController extends Controller
 {
@@ -130,18 +131,30 @@ class DashboardController extends Controller
 
         $hostFamilyTickets = EventOrder::where('pass_id', 4)->sum('qty');
 
+        $freeRegistration = EventOrder::where('pass_id', 5)->count();
+
         // dd($studentTickets, $professionalAdultTickets, $professionalFamilyTickets, $hostFamilyTickets);
         $totalRevenue = EventOrder::sum('amount');
+
+        $paymentSuccess = EventOrder::where('payment_status', 'success')->sum('amount');
+
+        $paymentPending = EventOrder::where('payment_status', 'pending')->sum('amount');
+
+        $paymentDonation = EventDonation::sum('amount');
 
         return view('dashboard', compact(
             'admin_details',
             'vendor_details',
             'ticketCount',
             'totalRevenue',
+            'paymentSuccess',
+            'paymentPending',
             'studentTickets',
             'professionalAdultTickets',
             'professionalFamilyTickets',
             'hostFamilyTickets',
+            'paymentDonation',
+            'freeRegistration',
         ));
     }
 
