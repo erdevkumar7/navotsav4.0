@@ -15,6 +15,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PhonePeController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WebviewController;
+use App\Http\Controllers\DonationController;
 
 Route::prefix('auth')->group(function () {
     Route::post('signup', [AuthController::class, 'register']);
@@ -114,3 +115,6 @@ Route::post('/get-pass', [PaymentController::class, 'getPassByMobile']);
 
 Route::post('/razorpay/order', [PaymentController::class, 'createOrder']);
 Route::post('/razorpay/verify', [PaymentController::class, 'verifyPayment']);
+
+Route::post('/donation/create-order', [DonationController::class, 'createOrder']);
+Route::post('/donation/verify-payment', [DonationController::class, 'verifyPayment']);

@@ -143,6 +143,98 @@ class DashboardController extends Controller
 
         $paymentDonation = EventDonation::sum('amount');
 
+        $jnvList = [
+            "Agar Malwa",
+            "Alirajpur",
+            "Anuppur",
+            "Ashoknagar",
+            "Balaghat",
+            "Barwani",
+            "Betul",
+            "Bhind",
+            "Bhopal",
+            "Burhanpur",
+            "Chhatarpur",
+            "Chhindwara",
+            "Damoh",
+            "Datia",
+            "Dewas",
+            "Dhar",
+            "Dindori",
+            "Guna",
+            "Gwalior",
+            "Harda",
+            "Hoshangabad",
+            "Indore",
+            "Jabalpur",
+            "Jhabua",
+            "Katni",
+            "Khandwa",
+            "Khargone",
+            "Mandla",
+            "Mandsaur",
+            "Morena",
+            "Narsinghpur",
+            "Neemuch",
+            "Panna",
+            "Raisen",
+            "Rajgarh",
+            "Ratlam",
+            "Rewa",
+            "Sagar",
+            "Satna",
+            "Sehore",
+            "Seoni",
+            "Shahdol",
+            "Shajapur",
+            "Sheopur",
+            "Shivpuri",
+            "Sidhi",
+            "Singrauli",
+            "Tikamgarh",
+            "Ujjain I",
+            "Ujjain II",
+            "Umaria",
+            "Vidisha"
+        ];
+
+        // ================= DB COUNTS =================
+        $dbCounts = EventOrder::select('jnv', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('jnv')
+            ->groupBy('jnv')
+            ->pluck('total', 'jnv');
+
+        $othersCount = 0;
+
+        // ================= FINAL JNV COUNTS =================
+        $jnvCounts = collect($jnvList)->map(function ($jnv) use ($dbCounts, &$othersCount) {
+
+            if ($dbCounts->has($jnv)) {
+                return [
+                    'jnv'   => $jnv,
+                    'total' => $dbCounts[$jnv]
+                ];
+            }
+
+            return [
+                'jnv'   => $jnv,
+                'total' => 0
+            ];
+        });
+
+        // ================= OTHERS =================
+        foreach ($dbCounts as $jnv => $count) {
+            if (!in_array($jnv, $jnvList)) {
+                $othersCount += $count;
+            }
+        }
+
+        // Add Others tile
+        $jnvCounts->push([
+            'jnv'   => 'Others',
+            'total' => $othersCount
+        ]);
+
         return view('dashboard', compact(
             'admin_details',
             'vendor_details',
@@ -157,6 +249,7 @@ class DashboardController extends Controller
             'paymentDonation',
             'freeRegistration',
             'allRegistration',
+            'jnvCounts',
         ));
     }
 
@@ -184,4 +277,200 @@ class DashboardController extends Controller
     // {
     //     return view('dashboard');
     // }
+
+    public function jnvlist()
+    {
+        $authUser = auth()->user();
+
+        // ================= Admin Details =================
+        $admin_details = [
+            'organizer_count' => User::where('user_type', 3)
+                ->where('status', 'active')
+                // ->where('is_verified', 'true')
+                ->count(),
+
+            'user_count' => User::where('user_type', 5)
+                ->where('status', 'active')
+                // ->where('is_verified', 'true')
+                ->count(),
+
+            'buyers_count' => Ticket::join('events', 'tickets.event_id', '=', 'events.id')
+                ->join('users as buyers', 'tickets.user_id', '=', 'buyers.id')
+                ->where('buyers.user_type', 5)
+                ->where('buyers.status', 'active')
+                // ->where('buyers.is_verified', 'true')
+                ->distinct('tickets.user_id')
+                ->count('tickets.user_id'),
+
+            'total_earning' => Ticket::where('status', 'paid')
+                ->sum('price'),
+
+            'total_tickets' => Ticket::count(),
+
+            'total_winners' => RaffleWinner::count(),
+
+            'total_events' => Event::where('is_publish', true)->where('status', 'active')->count(),
+
+            'active_events' => Event::where('is_publish', true)
+                ->where('status', 'active')
+                ->where('is_finalized', 'false')
+                ->count(),
+
+            'past_events' => Event::where('is_publish', true)
+                ->where('status', 'active')
+                ->where('is_finalized', 'true')
+                ->count(),
+
+            'total_orders' =>  Ticket::select('event_id', 'user_id')
+                ->where('status', 'paid')
+                ->groupBy('event_id', 'user_id')
+                ->get()
+                ->count(),
+
+            'total_claims' => ClaimRequest::count(),
+            'pending_claims' => ClaimRequest::where('status', 'pending')->count(),
+            'approved_claims' => ClaimRequest::where('status', 'approved')->count(),
+            'contact_leads' => ContactLead::count(),
+        ];
+
+        // ================= Vendor/Organizer Details =================
+        $vendor_details = [
+            'organizer_count' => 0,
+            'user_count' => 0,
+            'buyers_count' => 0,
+            'total_earning' => 0,
+            'total_orders' => 0,
+        ];
+
+        $ticketCount = EventOrder::sum('qty');
+
+        $studentTickets = EventOrder::where('pass_id', 1)->sum('qty');
+
+        $professionalAdultTickets = EventOrder::where('pass_id', 2)->sum('qty');
+
+        $professionalFamilyTickets = EventOrder::where('pass_id', 3)->sum('qty');
+
+        $hostFamilyTickets = EventOrder::where('pass_id', 4)->sum('qty');
+
+        $freeRegistration = EventOrder::where('pass_id', 5)->count();
+
+        $allRegistration = EventOrder::count();
+        // dd($allRegistration);
+        $totalRevenue = EventOrder::sum('amount');
+
+        $paymentSuccess = EventOrder::where('payment_status', 'success')->sum('amount');
+
+        $paymentPending = EventOrder::where('payment_status', 'pending')->sum('amount');
+
+        $paymentDonation = EventDonation::sum('amount');
+
+        $jnvList = [
+            "Agar Malwa",
+            "Alirajpur",
+            "Anuppur",
+            "Ashoknagar",
+            "Balaghat",
+            "Barwani",
+            "Betul",
+            "Bhind",
+            "Bhopal",
+            "Burhanpur",
+            "Chhatarpur",
+            "Chhindwara",
+            "Damoh",
+            "Datia",
+            "Dewas",
+            "Dhar",
+            "Dindori",
+            "Guna",
+            "Gwalior",
+            "Harda",
+            "Hoshangabad",
+            "Indore",
+            "Jabalpur",
+            "Jhabua",
+            "Katni",
+            "Khandwa",
+            "Khargone",
+            "Mandla",
+            "Mandsaur",
+            "Morena",
+            "Narsinghpur",
+            "Neemuch",
+            "Panna",
+            "Raisen",
+            "Rajgarh",
+            "Ratlam",
+            "Rewa",
+            "Sagar",
+            "Satna",
+            "Sehore",
+            "Seoni",
+            "Shahdol",
+            "Shajapur",
+            "Sheopur",
+            "Shivpuri",
+            "Sidhi",
+            "Singrauli",
+            "Tikamgarh",
+            "Ujjain I",
+            "Ujjain II",
+            "Umaria",
+            "Vidisha"
+        ];
+
+        // ================= DB COUNTS =================
+        $dbCounts = EventOrder::select('jnv', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('jnv')
+            ->groupBy('jnv')
+            ->pluck('total', 'jnv');
+
+        $othersCount = 0;
+
+        // ================= FINAL JNV COUNTS =================
+        $jnvCounts = collect($jnvList)->map(function ($jnv) use ($dbCounts, &$othersCount) {
+
+            if ($dbCounts->has($jnv)) {
+                return [
+                    'jnv'   => $jnv,
+                    'total' => $dbCounts[$jnv]
+                ];
+            }
+
+            return [
+                'jnv'   => $jnv,
+                'total' => 0
+            ];
+        });
+
+        // ================= OTHERS =================
+        foreach ($dbCounts as $jnv => $count) {
+            if (!in_array($jnv, $jnvList)) {
+                $othersCount += $count;
+            }
+        }
+
+        // Add Others tile
+        $jnvCounts->push([
+            'jnv'   => 'Others',
+            'total' => $othersCount
+        ]);
+
+        return view('jnvlist', compact(
+            'admin_details',
+            'vendor_details',
+            'ticketCount',
+            'totalRevenue',
+            'paymentSuccess',
+            'paymentPending',
+            'studentTickets',
+            'professionalAdultTickets',
+            'professionalFamilyTickets',
+            'hostFamilyTickets',
+            'paymentDonation',
+            'freeRegistration',
+            'allRegistration',
+            'jnvCounts',
+        ));
+    }
 }

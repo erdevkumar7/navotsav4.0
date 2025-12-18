@@ -140,6 +140,10 @@ Route::prefix('vendor')->as('vendor.')->group(function () {
     Route::middleware(['auth.vendor'])->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        
+        Route::get('/jnvlist', [DashboardController::class, 'jnvlist'])->name('jnvlist');
+
+
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::post('/profile/update', [AuthController::class, 'profileUpdate'])->name('profile.update');
         Route::post('/profile/change-password', [AuthController::class, 'profileChangePassword'])->name('profile.changePassword');
@@ -239,6 +243,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::middleware(['auth.admin'])->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/jnvlist', [DashboardController::class, 'jnvlist'])->name('jnvlist');
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::post('/profile/update', [AuthController::class, 'profileUpdate'])->name('profile.update');
         Route::post('/profile/change-password', [AuthController::class, 'profileChangePassword'])->name('profile.changePassword');
